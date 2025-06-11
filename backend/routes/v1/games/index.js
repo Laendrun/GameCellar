@@ -7,18 +7,15 @@ const prisma = new PrismaClient();
 router.get('/', async (req, res) => {
   let games = null;
   try {
-    games = await prisma.Game.findMany({
-      include: {
-        translations: true,
-      },
-    });
+    games = await prisma.Game.findMany({});
   } catch (e) {
     console.error(e);
     return res.status(500).send();
   }
 
+  console.log(games);
+
   res.json({
-    message: '[GET] - /v1/games',
     games,
   });
 });

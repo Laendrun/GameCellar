@@ -6,7 +6,8 @@
 			<!-- Language Switcher -->
 			<div class="space-x-2">
 				<button v-for="code in supportedLanguages" :key="code" :disabled="code === lang" @click="switchLanguage(code)"
-					:class="code === lang ? 'bg-blue-500 text-white' : 'bg-white text-blue-600 border-blue-500'">
+					:class="code === lang ? 'bg-blue-500 text-white' : 'bg-white text-blue-600 border-blue-500'"
+					class="cursor-pointer">
 					{{ code.toUpperCase() }}
 				</button>
 			</div>
