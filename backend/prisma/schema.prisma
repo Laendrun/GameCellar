@@ -37,3 +37,11 @@ model Translation {
 	gameId String
 	game Game @relation(fields: [gameId], references: [id])
 }
+
+model User {
+  id       String   @id @default(uuid())
+  username String   @unique
+  password String
+  isAdmin  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

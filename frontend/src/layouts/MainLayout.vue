@@ -3,6 +3,9 @@
 		<!-- Header -->
 		<header class="bg-white shadow p-4 flex justify-between items-center">
 			<RouterLink :to="`/${lang}`" class="text-xl font-bold text-blue-600 hover:text-blue-800">Game Cellar</RouterLink>
+			<div v-if="userStore.isAuthenticated" class="text-sm text-green-700 font-medium" @click="logout">
+				🔐 Logged in as <strong>{{ userStore.currentUser.username }}</strong>
+			</div>
 			<!-- Language Switcher -->
 			<div class="space-x-2">
 				<button v-for="code in supportedLanguages" :key="code" :disabled="code === lang" @click="switchLanguage(code)"
@@ -14,7 +17,7 @@
 		</header>
 		<!-- Main content -->
 		<main class="flex-1 p-6">
-			<RouterView />
+			<RouterView :user="user" />
 		</main>
 
 		<!-- Footer -->
@@ -25,14 +28,17 @@
 </template>
 
 <script setup>
-import { watch, computed } from 'vue'
+import { watch, computed, ref, onMounted } from 'vue'
+import { useUserStore } from '@/stores/user'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 const { locale } = useI18n()
 
+const userStore = useUserStore()
 const route = useRoute()
 const router = useRouter()
 const lang = computed(() => route.params.lang)
+const user = ref(null)
 
 watch(lang, (newLang) => {
 	locale.value = newLang
@@ -45,4 +51,17 @@ const switchLanguage = (code) => {
 	const newPath = `/${code}${route.fullPath.replace(/^\/[^/]+/, '')}`
 	router.push(newPath)
 }
+
+onMounted(() => {
+	userStore.fetchUser()
+})
+
+const logout = async () => {
+	await fetch('http://localhost:3000/api/v1/auth/logout', {
+		method: 'POST',
+		credentials: 'include'
+	})
+	userStore.logout()
+}
+
 </script>

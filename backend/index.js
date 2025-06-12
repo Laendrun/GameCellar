@@ -1,9 +1,17 @@
+require('dotenv').config();
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
 const port = 3000;
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:5173', '*'],
+  })
+);
+app.use(cookieParser());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 

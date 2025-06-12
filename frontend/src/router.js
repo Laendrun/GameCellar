@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 import GameDetails from '@/views/GameDetails.vue';
+import Login from '@/views/Login.vue';
 import i18n from '@/i18n';
 
 const supportedLanguages = ['en', 'fr'];
@@ -12,6 +13,7 @@ const routes = [
     children: [
       { path: '', name: 'Home', component: Home },
       { path: 'game/:id', name: 'GameDetails', component: GameDetails },
+      { path: 'login', name: 'Login', component: Login },
     ],
   },
   {

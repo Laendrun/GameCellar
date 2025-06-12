@@ -4,6 +4,24 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const { requireAuth } = require('../../../middlewares/auth');
+
+router.put('/:id/translations/:lang', requireAuth, async (req, res) => {
+  const { id, lang } = req.params;
+  const { rules } = req.body;
+
+  const updated = await prisma.translation.updateMany({
+    where: { gameId: id, lang },
+    data: { rules },
+  });
+
+  if (updated.count === 0)
+    return res.status(404).json({
+      message: 'Translation not found',
+    });
+  res.sendStatus(204);
+});
+
 router.get('/', async (req, res) => {
   let games = null;
   try {
@@ -12,8 +30,6 @@ router.get('/', async (req, res) => {
     console.error(e);
     return res.status(500).send();
   }
-
-  console.log(games);
 
   res.json({
     games,
@@ -45,10 +61,17 @@ router.get('/:id', async (req, res) => {
     return res.status(500).send();
   }
 
-  console.log(game);
   res.json({
     message: '[GET] - /v1/games/:id',
     game,
+  });
+});
+
+router.post('/', requireAuth, async (req, res) => {
+  // console.log(req.user);
+  res.json({
+    message: 'Protected route',
+    user: req.user,
   });
 });
 

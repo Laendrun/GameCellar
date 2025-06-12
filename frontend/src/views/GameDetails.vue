@@ -4,19 +4,26 @@
 	<div v-else class="max-w-4xl mx-auto p-6 space-y-6">
 		<GameHeader :game="game" />
 
-		<GameRules :rules="translatedRules" />
+		<GameRules :rules="translatedRules" :gameId="game.id" :user="user" @change="refresh" />
 
 		<!-- <BuyLinks v-if="game.buyLinks?.length" :links="game.buyLinks" /> -->
 	</div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import GameHeader from '@/components/GameHeader.vue'
 import GameRules from '@/components/GameRules.vue'
 // import BuyLinks from '@/components/BuyLinks.vue'
 
+const props = defineProps({
+	user: {
+		type: Object
+	}
+})
+
+// const user = inject('user', null)
 const route = useRoute()
 const game = ref(null)
 const loading = ref(true)
@@ -36,6 +43,11 @@ const fetchGame = async (lang) => {
 	}
 }
 
+const refresh = async () => {
+	console.log('refreshing game')
+	await fetchGame(currentLang.value)
+}
+
 onMounted(() => fetchGame(currentLang.value))
 
 watch(currentLang, (newLang) => {
@@ -50,25 +62,4 @@ const translatedRules = computed(() => {
 	const match = game.value.translations.find(t => t.lang === currentLang.value)
 	return match?.rules || 'No rules available in this language.'
 })
-
-// const translatedRules = computed(() => {
-// 	if (!game.value) return null
-// 	const currentLang = route.params.lang || 'en'
-// 	const match = game.value.translations.find(t => t.lang === currentLang)
-// 	return match?.rules || 'No rules available in this language.'
-// })
-
-// onMounted(async () => {
-// 	loading.value = true
-// 	try {
-// 		const lang = route.params.lang || 'en'
-// 		const res = await fetch(`http://localhost:3000/api/v1/games/${route.params.id}?lang=${lang}`)
-// 		const data = await res.json()
-// 		game.value = data.game
-// 	} catch (e) {
-// 		console.error(e)
-// 	} finally {
-// 		loading.value = false
-// 	}
-// })
 </script>
