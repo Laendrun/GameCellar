@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { upload } = require('../../../middlewares/upload');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -8,11 +9,25 @@ const { requireAuth } = require('../../../middlewares/auth');
 
 router.put('/:id/translations/:lang', requireAuth, async (req, res) => {
   const { id, lang } = req.params;
-  const { rules } = req.body;
+  const { rules, boxContent } = req.body;
 
-  const updated = await prisma.translation.updateMany({
-    where: { gameId: id, lang },
-    data: { rules },
+  const updated = await prisma.translation.upsert({
+    where: {
+      gameId_lang: {
+        gameId: id,
+        lang,
+      },
+    },
+    create: {
+      gameId: id,
+      lang,
+      rules: rules || '',
+      boxContent: boxContent || '',
+    },
+    update: {
+      rules,
+      boxContent,
+    },
   });
 
   if (updated.count === 0)
@@ -67,12 +82,49 @@ router.get('/:id', async (req, res) => {
   });
 });
 
-router.post('/', requireAuth, async (req, res) => {
-  // console.log(req.user);
-  res.json({
-    message: 'Protected route',
-    user: req.user,
-  });
+router.post('/', requireAuth, upload.single('boxImage'), async (req, res) => {
+  const user = req.user;
+  if (!user.isAdmin) return res.status(403).json({ error: 'Forbidden' });
+
+  const {
+    title,
+    company,
+    minPlayers,
+    maxPlayers,
+    averageDuration,
+    lang,
+    boxContent,
+  } = req.body;
+  const boxImageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+  if (!title || !company || !lang) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  try {
+    const newGame = await prisma.game.create({
+      data: {
+        title,
+        company,
+        minPlayers: parseInt(minPlayers),
+        maxPlayers: parseInt(maxPlayers),
+        averageDuration: parseInt(averageDuration),
+        boxImageUrl: boxImageUrl,
+        translations: {
+          create: {
+            lang,
+            rules: '',
+            boxContent: boxContent || '',
+          },
+        },
+      },
+    });
+
+    res.status(201).json({ id: newGame.id });
+  } catch (err) {
+    console.error('Error creating game:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 module.exports = router;

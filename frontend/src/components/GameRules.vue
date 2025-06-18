@@ -1,20 +1,38 @@
 <template>
 	<div class="relative">
 		<h2 class="text-xl font-semibold mb-4">{{ $t('gameRules') }}</h2>
-		<div v-if="!isEditing" v-html="compiledMarkdown" class="prose max-w-none"></div>
-		<div v-else>
-			<textarea v-model="editableRules" class="w-full p-3 border rounded h-64 font-mono"></textarea>
-			<div class="flex justify-end mt-2 gap-2">
-				<button class="bg-gray-200 hover:bg-gray-300 text-sm px-4 py-1 rounded" @click="cancel">
+
+		<!-- Display Mode -->
+		<div v-if="!isEditing">
+			<!-- <p v-if="boxContent" class="text-sm mb-4 text-gray-700">{{ boxContent }}</p> -->
+			<div class="prose max-w-none" v-html="compiledMarkdown" />
+		</div>
+
+		<!-- Edit Mode -->
+		<div v-else class="space-y-4">
+			<div>
+				<label class="block text-sm font-medium mb-1">{{ $t('boxContent') }}</label>
+				<input v-model="editableBoxContent" type="text" class="w-full border px-3 py-2 rounded text-sm" />
+			</div>
+
+			<div>
+				<label class="block text-sm font-medium mb-1">{{ $t('rules') }}</label>
+				<textarea v-model="editableRules" class="w-full p-3 border rounded h-64 font-mono text-sm"></textarea>
+			</div>
+
+			<div class="flex justify-end gap-2">
+				<button @click="cancel" class="bg-gray-200 hover:bg-gray-300 px-4 py-1 rounded text-sm">
 					{{ $t('cancel') }}
 				</button>
-				<button class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1 rounded" @click="save">
+				<button @click="save" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm">
 					{{ $t('save') }}
 				</button>
 			</div>
 		</div>
-		<button v-if="isAuthenticated && !isEditing" class="absolute top-0 right-0 text-sm text-blue-600 hover:underline"
-			@click="startEdit">
+
+		<!-- Edit Button -->
+		<button v-if="isAuthenticated && !isEditing" @click="startEdit"
+			class="absolute top-0 right-0 text-sm text-blue-600 hover:underline">
 			✏️ {{ $t('edit') }}
 		</button>
 	</div>
@@ -32,6 +50,7 @@ const emit = defineEmits(['change'])
 const props = defineProps({
 	rules: { type: String, required: true },
 	gameId: { type: String, required: true },
+	boxContent: { type: String, required: true },
 	user: { type: [Object, null], required: true }
 })
 
@@ -39,6 +58,7 @@ const route = useRoute()
 const md = new MarkdownIt()
 
 const editableRules = ref('')
+const editableBoxContent = ref('')
 const isEditing = ref(false)
 
 
@@ -47,6 +67,7 @@ const compiledMarkdown = computed(() => md.render(props.rules))
 
 const startEdit = () => {
 	editableRules.value = props.rules
+	editableBoxContent.value = props.boxContent
 	isEditing.value = true
 }
 
@@ -63,7 +84,10 @@ const save = async () => {
 				'Content-Type': 'application/json'
 			},
 			credentials: 'include',
-			body: JSON.stringify({ rules: editableRules.value })
+			body: JSON.stringify({
+				rules: editableRules.value,
+				boxContent: editableBoxContent.value
+			})
 		})
 
 		if (!res.ok) {

@@ -34,7 +34,10 @@ model Translation {
 	id String @id @default(uuid())
 	lang String // 'fr', 'en', etc
 	rules String
+	boxContent String?
 	gameId String
+
+	@@unique([gameId, lang])
 	game Game @relation(fields: [gameId], references: [id])
 }
 

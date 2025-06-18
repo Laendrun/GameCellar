@@ -8,6 +8,9 @@
 				{{ game.minPlayers }}-{{ game.maxPlayers }} {{ $t('players') }} / {{ game.averageDuration }} {{ $t('min') }}
 			</p>
 			<p class="text-sm text-gray-600 italic">{{ game.company }}</p>
+			<p class="text-sm text-gray-600 mt-2">
+				📦 {{ boxContent }}
+			</p>
 		</div>
 	</div>
 </template>
@@ -17,6 +20,10 @@
 const props = defineProps({
 	game: {
 		type: Object,
+		required: true
+	},
+	boxContent: {
+		type: [String, null],
 		required: true
 	}
 })

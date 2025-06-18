@@ -2,9 +2,10 @@
 	<div v-if="loading" class="text-center text-gray-500">Loading...</div>
 	<div v-else-if="!game" class="text-center text-red-500">Game not found.</div>
 	<div v-else class="max-w-4xl mx-auto p-6 space-y-6">
-		<GameHeader :game="game" />
+		<GameHeader :game="game" :boxContent="translatedContent" />
 
-		<GameRules :rules="translatedRules" :gameId="game.id" :user="user" @change="refresh" />
+		<GameRules :rules="translatedRules" :boxContent="translatedContent" :gameId="game.id" :user="user"
+			@change="refresh" />
 
 		<!-- <BuyLinks v-if="game.buyLinks?.length" :links="game.buyLinks" /> -->
 	</div>
@@ -13,9 +14,12 @@
 <script setup>
 import { ref, onMounted, computed, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import GameHeader from '@/components/GameHeader.vue'
 import GameRules from '@/components/GameRules.vue'
 // import BuyLinks from '@/components/BuyLinks.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
 	user: {
@@ -44,7 +48,7 @@ const fetchGame = async (lang) => {
 }
 
 const refresh = async () => {
-	console.log('refreshing game')
+	// console.log('refreshing game')
 	await fetchGame(currentLang.value)
 }
 
@@ -57,9 +61,15 @@ watch(currentLang, (newLang) => {
 	}
 })
 
+const translatedContent = computed(() => {
+	if (!game.value) return null
+	const match = game.value.translations.find(t => t.lang === currentLang.value)
+	return match?.boxContent || ''
+})
+
 const translatedRules = computed(() => {
 	if (!game.value) return null
 	const match = game.value.translations.find(t => t.lang === currentLang.value)
-	return match?.rules || 'No rules available in this language.'
+	return match?.rules || t('no-rules')
 })
 </script>

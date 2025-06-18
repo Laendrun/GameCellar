@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1 class="text-2xl font-bold mb-6">{{ $t('home') }}</h1>
-		<GameGrid :games="games" :loading="loading" />
+		<GameGrid :games="games" :loading="loading" @refresh="fetchGames" />
 	</div>
 </template>
 
@@ -12,8 +12,8 @@ import GameGrid from '@/components/GameGrid.vue'
 const games = ref([])
 const loading = ref(true)
 
-onMounted(async () => {
-	// const lang = route.params.lang || 'en'
+const fetchGames = async () => {
+	console.log('fetching games')
 	try {
 		const res = await fetch(`http://localhost:3000/api/v1/games`)
 		const data = await res.json()
@@ -23,5 +23,9 @@ onMounted(async () => {
 	} finally {
 		loading.value = false
 	}
+}
+
+onMounted(async () => {
+	await fetchGames()
 })
 </script>

@@ -18,6 +18,8 @@ const messages = {
     cancel: 'Cancel',
     save: 'Save',
     edit: 'Edit',
+    'no-rules': 'No rules available in this language.',
+    boxContent: 'Box Content',
   },
   fr: {
     appTitle: 'Game Cellar',
@@ -36,6 +38,8 @@ const messages = {
     cancel: 'Annuler',
     save: 'Enregistrer',
     edit: 'Modifier',
+    'no-rules': 'Pas de règle disponible dans ce langage.',
+    boxContent: 'Contenu de la boîte',
   },
 };
 

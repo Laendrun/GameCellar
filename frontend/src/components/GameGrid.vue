@@ -4,14 +4,22 @@
 			<GameCardSkeletton v-for="n in 8" :key="n" />
 		</template>
 		<template v-else>
+			<GameCardAdd v-if="userStore.isAuthenticated" @created="emit('refresh')" />
 			<GameCard v-for="game in games" :key="game.id" :game="game" />
 		</template>
 	</div>
 </template>
 
 <script setup>
+import { defineEmits } from 'vue'
+import { useUserStore } from '@/stores/user'
 import GameCard from './GameCard.vue'
 import GameCardSkeletton from './GameCardSkeletton.vue'
+import GameCardAdd from './GameCardAdd.vue'
+
+const emit = defineEmits(['refresh'])
+
+const userStore = useUserStore()
 
 const props = defineProps({
 	games: {
