@@ -1,0 +1,90 @@
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - frontend
+    networks:
+      gc:
+        aliases:
+          - nginx
+    volumes:
+      - certs:/etc/letsencrypt
+      - frontend_vol:/var/www/frontend/
+    ports:
+      - '80:80'
+      - '443:443'
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    networks:
+      gc:
+        aliases:
+          - frontend
+    volumes:
+      - frontend_vol:/app/dist
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL
+      - JWT_SECRET
+    volumes:
+      - uploads:/uploads
+    depends_on:
+      - database
+    networks:
+      gc:
+        aliases:
+          - backend
+    ports:
+      - '3000:3000'
+
+  database:
+    image: postgres:15
+    networks:
+      gc:
+        aliases:
+          - database
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  certbot:
+    image: certbot/certbot
+    container_name: gamecellar-certbot
+    volumes:
+      - certs:/etc/letsencrypt
+      - certbot-logs:/var/log/letsencrypt
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do sleep 1; done"
+    networks:
+      gc:
+        aliases:
+          - certbot
+
+networks:
+  gc:
+
+volumes:
+  db_data:
+    name: db_data
+  uploads:
+    name: uploads
+  frontend_vol:
+    name: frontend_vol
+  certs:
+    name: certs
+  certbot-logs:
+    name: certbot-logs
