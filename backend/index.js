@@ -8,7 +8,11 @@ const port = 3000;
 app.use(
   cors({
     credentials: true,
-    origin: ['http://localhost:5173', 'http://localhost'],
+    origin: [
+      'http://localhost:5173',
+      'http://localhost',
+      'http://localhost:8080',
+    ],
   })
 );
 app.use(cookieParser());

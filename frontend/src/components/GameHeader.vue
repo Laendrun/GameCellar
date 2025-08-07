@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col md:flex-row gap-6 items start">
-    <img :src="`${BACKEND_URL}${game.boxImageUrl}`" :alt="game.title"
+    <img :src="`${UPLOADS_PATH}${game.boxImageUrl}`" :alt="game.title"
       class="w-full md:w-64 rounder-xl shadow-md object-cover" />
     <div class="flex-1 space-y-2">
       <h1 class="text-2xl font-bold text-gray-900">{{ game.title }}</h1>
@@ -28,5 +28,5 @@ const props = defineProps({
   }
 })
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+const UPLOADS_PATH = import.meta.env.VITE_UPLOADS_PATH;
 </script>

@@ -57,7 +57,7 @@ onMounted(() => {
 })
 
 const logout = async () => {
-  await fetch(`${import.meta.env.VITE_API}/v1/auth/logout`, {
+  await fetch(`${import.meta.env.VITE_API_URL}/v1/auth/logout`, {
     method: 'POST',
     credentials: 'include'
   })

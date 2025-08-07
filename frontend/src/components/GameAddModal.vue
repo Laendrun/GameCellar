@@ -21,7 +21,7 @@
 
 
         <div class="flex justify-end mt-4 space-x-2">
-          <button type="button" class="text-sm" @click="emit('close')">Cancel</button>
+          <button type="button" class="text-sm" @click.stop="emit('close')">Cancel</button>
           <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Create</button>
         </div>
       </form>
@@ -41,8 +41,11 @@ const averageDuration = ref(30)
 const boxContent = ref('')
 const boxImage = ref(null)
 
-const emit = defineEmits(['close', 'created'])
+const props = defineProps({ open: Boolean })
+const emit = defineEmits(['update:open', 'created', 'close'])
 const route = useRoute()
+
+// const close = () => emit('close')
 
 const setFile = (e) => {
   boxImage.value = e.target.files[0]

@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white rounded-2xl shadow hover:shadow-md transition cursor-pointer overflow-hidden" @click="goToGame">
-    <img :src="`${BACKEND_URL}${game.boxImageUrl}`" :alt="game.title" class="w-full h-48 object-cover" />
+    <img :src="`${UPLOADS_PATH}${game.boxImageUrl}`" :alt="game.title" class="w-full h-48 object-cover" />
 
     <div class="p-4">
       <h2 class="text-lg font-semibold text-gray-900 truncate">{{ game.title }}</h2>
@@ -21,10 +21,10 @@ const props = defineProps({
   }
 })
 
+const UPLOADS_PATH = import.meta.env.VITE_UPLOADS_PATH;
+
 const router = useRouter()
 const route = useRoute()
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 function goToGame() {
   const lang = route.params.lang || 'en'

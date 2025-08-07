@@ -95,7 +95,7 @@ router.post('/', requireAuth, upload.single('boxImage'), async (req, res) => {
     lang,
     boxContent,
   } = req.body;
-  const boxImageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+  const boxImageUrl = req.file ? `/${req.file.filename}` : null;
 
   if (!title || !company || !lang) {
     return res.status(400).json({ error: 'Missing required fields' });

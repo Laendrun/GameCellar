@@ -11,15 +11,19 @@ services:
           - nginx
     volumes:
       - certs:/etc/letsencrypt
+      - uploads:/var/www/images
       - frontend_vol:/var/www/frontend/
     ports:
-      - '80:80'
+      - '8080:80'
       - '443:443'
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_UPLOADS_PATH: ${VITE_UPLOADS_PATH}
     depends_on:
       - backend
     networks:
@@ -37,7 +41,7 @@ services:
       - DATABASE_URL
       - JWT_SECRET
     volumes:
-      - uploads:/uploads
+      - uploads:/app/uploads
     depends_on:
       - database
     networks:
