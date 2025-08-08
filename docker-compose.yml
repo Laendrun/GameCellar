@@ -3,6 +3,9 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
+    environment:
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - DOMAIN=${DOMAIN}
     depends_on:
       - frontend
     networks:
@@ -14,7 +17,7 @@ services:
       - uploads:/var/www/images
       - frontend_vol:/var/www/frontend/
     ports:
-      - '8080:80'
+      - '80:80'
       - '443:443'
 
   frontend:
@@ -66,18 +69,6 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  certbot:
-    image: certbot/certbot
-    container_name: gamecellar-certbot
-    volumes:
-      - certs:/etc/letsencrypt
-      - certbot-logs:/var/log/letsencrypt
-    entrypoint: /bin/sh -c "trap exit TERM; while :; do sleep 1; done"
-    networks:
-      gc:
-        aliases:
-          - certbot
-
 networks:
   gc:
 
@@ -90,5 +81,3 @@ volumes:
     name: frontend_vol
   certs:
     name: certs
-  certbot-logs:
-    name: certbot-logs

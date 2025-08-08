@@ -1,0 +1,9 @@
+# HTTP: redirect everything (except ACME challenges) to HTTPS
+server {
+  listen 80;
+  server_name ${DOMAIN};
+
+  location / {
+    return 301 https://${DOMAIN}$request_uri;
+  }
+}
