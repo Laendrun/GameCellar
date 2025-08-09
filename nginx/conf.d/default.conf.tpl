@@ -3,7 +3,23 @@ server {
   listen 80;
   server_name ${DOMAIN};
 
+  location /api/ {
+    proxy_pass http://backend:3000/api/; # Backend service name & port from docker-compose
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+}
+
+  location /images/ {
+    root /var/www/;
+    autoindex off;
+  }
+
   location / {
-    return 301 https://${DOMAIN}$request_uri;
+    root /var/www/frontend;
+    index index.html;
+    try_files $uri $uri/ /index.html;
   }
 }
