@@ -1,19 +1,22 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+  <div class="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
     <!-- Header -->
-    <header class="bg-white shadow p-4 flex justify-between items-center">
+    <header class="bg-white shadow dark:bg-gray-800 dark:shadow-gray-900 p-4 flex justify-between items-center">
       <RouterLink :to="`/${lang}`" class="text-xl font-bold text-blue-600 hover:text-blue-800">Game Cellar</RouterLink>
-      <div v-if="userStore.isAuthenticated" class="text-sm text-green-700 font-medium" @click="logout">
+      <div v-if="userStore.isAuthenticated" class="text-sm text-green-400 font-medium dark:text-green-400"
+        @click="logout">
         🔐 Logged in as <strong>{{ userStore.currentUser.username }}</strong>
       </div>
       <!-- Language Switcher -->
-      <div class="space-x-2">
+      <!-- <div class="space-x-2">
         <button v-for="code in supportedLanguages" :key="code" :disabled="code === lang" @click="switchLanguage(code)"
           :class="code === lang ? 'bg-blue-500 text-white' : 'bg-white text-blue-600 border-blue-500'"
           class="cursor-pointer">
           {{ code.toUpperCase() }}
         </button>
-      </div>
+      </div> -->
+      <!-- Theme Switcher -->
+      <button @click="switchTheme()" class="bg-blue-500 text-white">{{ theme }}</button>
     </header>
     <!-- Main content -->
     <main class="flex-1 p-6">
@@ -21,7 +24,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white text-center p-4 text-sm text-gray-500">
+    <footer class="bg-white text-center p-4 text-sm text-gray-500 dark:bg-gray-800 dark:text-gray-400">
       &copy; {{ new Date().getFullYear() }} Game Cellar
     </footer>
   </div>
@@ -39,6 +42,7 @@ const route = useRoute()
 const router = useRouter()
 const lang = computed(() => route.params.lang)
 const user = ref(null)
+const theme = ref('light')
 
 watch(lang, (newLang) => {
   locale.value = newLang
@@ -52,7 +56,28 @@ const switchLanguage = (code) => {
   router.push(newPath)
 }
 
+const applyTheme = (newTheme) => {
+  theme.value = newTheme
+  document.documentElement.classList.toggle('dark', newTheme === 'dark')
+  localStorage.setItem('theme', newTheme)
+}
+
+const switchTheme = () => {
+  applyTheme(theme.value === 'dark' ? 'light' : 'dark')
+}
+
 onMounted(() => {
+  // Load saved theme
+  const savedTheme = localStorage.getItem('theme')
+
+  if (savedTheme) {
+    applyTheme(savedTheme)
+  } else {
+    // Fallback: system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    applyTheme(prefersDark ? 'dark' : 'light')
+  }
+
   userStore.fetchUser()
 })
 
