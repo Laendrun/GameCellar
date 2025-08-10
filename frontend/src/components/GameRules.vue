@@ -16,15 +16,17 @@
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-1">{{ $t('rules') }}</label>
+        <label class="block text-sm font-medium mb-1">{{ $t('gameRules') }}</label>
         <textarea v-model="editableRules" class="w-full p-3 border rounded h-64 font-mono text-sm"></textarea>
       </div>
 
       <div class="flex justify-end gap-2">
-        <button @click="cancel" class="bg-gray-200 hover:bg-gray-300 px-4 py-1 rounded text-sm">
+        <button @click="cancel"
+          class="bg-gray-200 hover:bg-gray-300 px-4 py-1 rounded text-sm hover:cursor-pointer dark:text-gray-800">
           {{ $t('cancel') }}
         </button>
-        <button @click="save" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm">
+        <button @click="save"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded text-sm hover:cursor-pointer">
           {{ $t('save') }}
         </button>
       </div>

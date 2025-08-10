@@ -17,7 +17,7 @@
       </div> -->
       <!-- Theme Switcher -->
       <button @click="switchTheme"
-        class="bg-blue-500 text-white w-10 h-10 flex items-center justify-center rounded-full">
+        class="bg-blue-500 text-white w-10 h-10 flex items-center justify-center rounded-full hover:cursor-pointer">
         <!-- Rotation wrapper -->
         <span class="transition-transform duration-500 ease-in-out transform"
           :class="theme === 'dark' ? 'rotate-180' : 'rotate-0'">
