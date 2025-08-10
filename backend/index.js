@@ -11,14 +11,10 @@ app.use(morgan('tiny'));
 app.use(
   cors({
     credentials: true,
-    origin: [
-      'http://localhost:5173',
-      'http://localhost',
-      'http://localhost:8080',
-      'https://cellar.laendrun.ch',
-    ],
+    origin: [process.env.DOMAIN],
   })
 );
+
 app.use(cookieParser());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
