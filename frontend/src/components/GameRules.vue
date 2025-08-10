@@ -5,7 +5,7 @@
     <!-- Display Mode -->
     <div v-if="!isEditing">
       <!-- <p v-if="boxContent" class="text-sm mb-4 text-gray-700">{{ boxContent }}</p> -->
-      <div class="prose max-w-none dark:text-gray-400" v-html="compiledMarkdown"></div>
+      <div class="prose max-w-none dark:prose-invert" v-html="compiledMarkdown"></div>
     </div>
 
     <!-- Edit Mode -->

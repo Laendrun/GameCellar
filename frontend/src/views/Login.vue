@@ -1,16 +1,21 @@
 <template>
-  <div class="max-w-sm mx-auto mt-20 p-6 bg-white rounded-xl shadow space-y-6">
+  <div class="max-w-sm mx-auto mt-20 p-6 bg-white dark:bg-gray-800 rounded-xl shadow dark:shadow-gray-900 space-y-6">
     <h1 class="text-2xl font-bold text-center">{{ $t('login') }}</h1>
 
     <form @submit.prevent="login" class="space-y-4">
       <div>
-        <label for="username" class="block text-sm font-medium text-gray-700">{{ $t('username') }}</label>
-        <input v-model="username" type="text" class="w-full border border-gray-300 rounded p-2 mt-1" name="username"
-          id="username_input" required />
+        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-200">{{ $t('username')
+        }}</label>
+        <input v-model="username" type="text"
+          class="w-full rounded-lg px-3 py-2 my-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          name="username" id="username_input" required />
       </div>
       <div>
-        <label for="password" class="block text-sm font-medium text-gray-700">{{ $t('password') }}</label>
-        <input v-model="password" type="password" class="w-full border border-gray-300 rounded p-2 mt-1" required />
+        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">{{ $t('password')
+          }}</label>
+        <input v-model="password" type="password"
+          class="w-full rounded-lg px-3 py-2 my-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          required />
       </div>
 
       <div v-if="error" class="text-red-600 text-sm">{{ error }}</div>
