@@ -4,11 +4,11 @@ import GameDetails from '@/views/GameDetails.vue';
 import Login from '@/views/Login.vue';
 import i18n from '@/i18n';
 
-const supportedLanguages = ['en', 'fr'];
+const supportedLanguages = ['fr'];
 
 const routes = [
   {
-    path: '/:lang(en|fr)?',
+    path: '/:lang(fr)?',
     component: () => import('./layouts/MainLayout.vue'),
     children: [
       { path: '', name: 'Home', component: Home },
@@ -22,13 +22,13 @@ const routes = [
       const browserLang = navigator.language.split('-')[0];
       const lang = supportedLanguages.includes(browserLang)
         ? browserLang
-        : 'en';
+        : 'fr';
       return `/${lang}`;
     },
   },
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/en',
+    redirect: '/fr',
   },
 ];
 
@@ -42,7 +42,7 @@ router.beforeEach((to, from, next) => {
 
   if (!supportedLanguages.includes(lang)) {
     return next({
-      path: `/en${to.fullPath.replace(/^\/[^/]+/, '')}`,
+      path: `/fr${to.fullPath.replace(/^\/[^/]+/, '')}`,
     });
   }
   if (i18n.global.locale.value !== lang) {

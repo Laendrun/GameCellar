@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
     "@tailwindcss/vite": "^4.1.8",
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.3",

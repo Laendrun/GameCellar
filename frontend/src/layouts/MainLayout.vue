@@ -16,7 +16,18 @@
         </button>
       </div> -->
       <!-- Theme Switcher -->
-      <button @click="switchTheme()" class="bg-blue-500 text-white">{{ theme }}</button>
+      <button @click="switchTheme"
+        class="bg-blue-500 text-white w-10 h-10 flex items-center justify-center rounded-full">
+        <!-- Rotation wrapper -->
+        <span class="transition-transform duration-500 ease-in-out transform"
+          :class="theme === 'dark' ? 'rotate-180' : 'rotate-0'">
+          <!-- Fade transition for icon swap -->
+          <transition name="fade" mode="out-in">
+            <MoonIcon v-if="theme === 'light'" key="moon" class="w-5 h-5" />
+            <SunIcon v-else key="sun" class="w-5 h-5" />
+          </transition>
+        </span>
+      </button>
     </header>
     <!-- Main content -->
     <main class="flex-1 p-6">
@@ -35,6 +46,7 @@ import { watch, computed, ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { SunIcon, MoonIcon } from '@heroicons/vue/24/solid'
 const { locale } = useI18n()
 
 const userStore = useUserStore()
@@ -90,3 +102,15 @@ const logout = async () => {
 }
 
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

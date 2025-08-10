@@ -5,14 +5,14 @@
     <form @submit.prevent="login" class="space-y-4">
       <div>
         <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-200">{{ $t('username')
-        }}</label>
+          }}</label>
         <input v-model="username" type="text"
           class="w-full rounded-lg px-3 py-2 my-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           name="username" id="username_input" required />
       </div>
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">{{ $t('password')
-          }}</label>
+        }}</label>
         <input v-model="password" type="password"
           class="w-full rounded-lg px-3 py-2 my-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           required />
@@ -40,7 +40,7 @@ const password = ref('')
 const error = ref('')
 const router = useRouter()
 const route = useRoute()
-const lang = computed(() => route.params.lang || 'en')
+// const lang = computed(() => route.params.lang || 'fr')
 
 const login = async () => {
   error.value = ''
@@ -57,7 +57,7 @@ const login = async () => {
       return
     }
     await userStore.fetchUser()
-    router.push(`/${lang}`)
+    router.push(`/fr`)
   } catch (err) {
     error.value = t('login-error')
     console.error(err)
