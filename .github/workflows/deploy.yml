@@ -1,0 +1,33 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (not strictly needed for SSH, but useful)
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /apps/cellar/
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Remove old frontend volume
+            docker compose down
+            docker volume rm frontend_vol
+
+            # Rebuild with latest code
+            docker compose --env-file .env build --no-cache frontend backend nginx
+            docker compose up -d --remove-orphans
