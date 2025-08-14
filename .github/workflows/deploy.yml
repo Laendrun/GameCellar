@@ -31,3 +31,9 @@ jobs:
             # Rebuild with latest code
             docker compose --env-file .env build --no-cache frontend backend nginx
             docker compose up -d --remove-orphans
+
+            # Apply Prisma migrations
+            docker compose exec backend npx prisma migrate deploy
+
+            # Re-generate Prisma client
+            docker compose exec backend npx prisma generate
