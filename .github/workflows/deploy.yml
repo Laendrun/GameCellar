@@ -33,7 +33,7 @@ jobs:
             docker compose up -d --remove-orphans
 
             # Apply Prisma migrations
-            docker compose exec backend npx prisma migrate deploy
+            docker compose exec backend npx prisma db push
 
             # Re-generate Prisma client
             docker compose exec backend npx prisma generate
