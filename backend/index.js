@@ -8,12 +8,12 @@ const port = 3000;
 
 app.use(morgan('tiny'));
 
-app.use(
-  cors({
-    credentials: true,
-    origin: [process.env.DOMAIN],
-  })
-);
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: [process.env.DOMAIN],
+//   })
+// );
 
 app.use(cookieParser());
 app.use(express.json());
