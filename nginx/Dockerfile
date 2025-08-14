@@ -10,6 +10,7 @@ RUN apk add --no-cache \
 
 # copy your Nginx template
 COPY conf.d/default.conf.tpl /etc/nginx/conf.d/default.conf.tpl
+COPY conf.d/ratelimits.conf /etc/nginx/conf.d/ratelimits.conf
 
 # entry script: render config, start nginx in background, run certbot then foreground nginx
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
