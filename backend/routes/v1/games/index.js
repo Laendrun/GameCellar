@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { upload } = require('../../../middlewares/upload');
+const { cacheFor } = require('../../../helpers');
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -37,10 +38,12 @@ router.put('/:id/translations/:lang', requireAuth, async (req, res) => {
   res.sendStatus(204);
 });
 
-router.get('/', async (req, res) => {
+router.get('/', cacheFor(7200), async (req, res) => {
   let games = null;
   try {
-    games = await prisma.Game.findMany({});
+    games = await prisma.Game.findMany({
+      orderBy: [{ title: 'asc' }, { id: 'asc' }],
+    });
   } catch (e) {
     console.error(e);
     return res.status(500).send();
