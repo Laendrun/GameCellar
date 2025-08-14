@@ -3,11 +3,10 @@ const morgan = require('morgan');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const app = express();
-const cors = require('cors');
+// const cors = require('cors');
 const port = 3000;
 
 app.use(morgan('tiny'));
-
 // app.use(
 //   cors({
 //     credentials: true,
